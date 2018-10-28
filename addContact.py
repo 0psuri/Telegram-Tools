@@ -1,49 +1,47 @@
-import sys
+# -*- coding: utf-8 -*-
+
+from pyrogram import Client, InputPhoneContact
 from random import randint
-from time import sleep
-from subprocess import Popen, PIPE
 
-telegram = ''
-
-def addNumber(num):
-    global telegram
-
-    if telegram == '':
-        telegram = Popen(["telegram-cli"], stdin=PIPE, stdout=sys.stdout)
-    
-    line = "add_contact {} {} {}\r".format(num, "Deanon", num)
-    telegram.stdin.write(line)
-    sleep(1)
+def Add_Contact(number):
+    temp = InputPhoneContact(str(number), 'Deanon', str(number))
+    app.add_contacts(temp)
 
 def fromFile():
-    file_name = raw_input("File: ")
+    file_name = input("File: ")
     numbers = open(file_name).read().split('\n')
 
     for num in numbers:
-        addNumber(num)
+        Add_Contact(num)
 
 def rndGenerator():
-    r0 = int(raw_input("From (ex. 150000000000): "))
-    r1 = int(raw_input("To (ex. 150099999999): "))
+    r0 = int(input("From (ex. 150000000000): "))
+    r1 = int(input("To (ex. 150099999999): "))
 
     while True:
-        addNumber(randint(r0,r1))
+        Add_Contact(randint(r0,r1))
 
 def inRange():
-    a = int(raw_input("From (ex. 150000000000): "))
-    b = int(raw_input("To (ex. 150099999999): "))
+    a = int(input("From (ex. 150000000000): "))
+    b = int(input("To (ex. 150099999999): "))
 
     while a != b:
-        addNumber(a)
+        Add_Contact(a)
         a += 1
 
-select = raw_input("Adding from:\n1 - file\n2 - random generation\n3 - 'brutoforce' numbers\nSelect: ")
+if __name__ == '__main__':
+    app = Client("my_account")
+    app.start()
 
-if select == "1":
-    fromFile()
-elif select == "2":
-    rndGenerator()
-elif select == "3":
-    inRange()
-else:
-    print "Invalid input!"
+    select = input("Adding from:\n1 - file\n2 - random generation\n3 - 'brutoforce' numbers\nSelect: ")
+
+    if select == "1":
+        fromFile()
+    elif select == "2":
+        rndGenerator()
+    elif select == "3":
+        inRange()
+    else:
+        print("Invalid input!")
+    
+    app.stop()
